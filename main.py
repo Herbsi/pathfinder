@@ -52,7 +52,32 @@ def main():
         player = Player()
         player.create_new_character()
 
+    while True:
+        village()
+
     sys.exit(0)
+
+
+def village():
+    while True:
+        print("Welcome to Prog0 Village!")
+        print("What do you want to do?")
+        print()
+        print("  1) Inventory")
+        print("  2) Merchant")
+        print("  3) Blacksmith")
+        print("  4) Druid")
+        print("  5) Dungeon")
+        print("  6) Save Game")
+        print("  0) Quit Game")
+        print()
+
+        user_input = int(input("> "))
+        if user_input in range(7):
+            break
+        print("Invalid choice. Try again")
+
+        # main_game(user_input)
 
 
 if __name__ == "__main__":

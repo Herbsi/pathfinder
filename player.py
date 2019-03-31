@@ -62,3 +62,36 @@ class Player:
             answer = input("Please enter Y/y for yes or N/n for no!")
         if answer.lower() == "n":
             self.create_new_character()
+
+    def list_inventory(self):
+        print("Welcome to your inventory {}".format(self.name))
+        print("These are your items:")
+        print()
+        for item in self.inventory:
+            print("  * {}\t\t{}".format(item.name, item.effect))
+        print()
+        print("Type 'quit' or the name of the item you want to use/drop:")
+        user_input = input("> ")
+        if user_input in self._item_names:
+            user_does = input(
+                "Do you want to 'use' or 'drop' {}? Else 'quit'.".format(user_input)
+            )
+            if user_does == "use":
+                # use item
+                print("You used {}".format(user_input))
+            elif user_does == "drop":
+                # remove item from inventory
+                print("You dropped {}".format(user_input))
+            elif user_does == "quit":
+                print("Nothing done.")
+                self.list_inventory()
+            else:
+                print("Nothing done.")
+                return
+        else:
+            print("Item does not exist")
+            self.list_inventory()
+
+    @property
+    def _item_names(self):
+        return [item.name for item in self.inventory]
