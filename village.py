@@ -6,10 +6,11 @@ from json_serialization import json_class
 
 @json_class
 class Village:
-    def __init__(self, player, savefile, bonus_tasks):
-        self.player = player
-        self.savefile = savefile
-        self.bonus_tasks = bonus_tasks
+    def __init__(self, **village):
+        self.player = None
+        self.savefile = ""
+        self.bonus_tasks = False
+        self.__dict__.update(village)
 
     def village(self):
         while True:
