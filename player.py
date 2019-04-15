@@ -64,34 +64,73 @@ class Player:
             self.create_new_character()
 
     def list_inventory(self):
-        print("Welcome to your inventory {}".format(self.name))
-        print("These are your items:")
-        print()
-        for item in self.inventory:
-            print("  * {}\t\t{}".format(item.name, item.effect))
-        print()
-        print("Type 'quit' or the name of the item you want to use/drop:")
-        user_input = input("> ")
-        if user_input in self._item_names:
-            user_does = input(
-                "Do you want to 'use' or 'drop' {}? Else 'quit'.".format(user_input)
-            )
-            if user_does == "use":
-                # use item
-                print("You used {}".format(user_input))
-            elif user_does == "drop":
-                # remove item from inventory
-                print("You dropped {}".format(user_input))
-            elif user_does == "quit":
-                print("Nothing done.")
-                self.list_inventory()
+        while True:
+            print("Welcome to your inventory {}".format(self.name))
+            print("These are your items:")
+            print()
+            for item in self.inventory:
+                print("  * {}\t\t{}".format(item.name, item.effect))
+            print()
+            print("Type 'quit' or the name of the item you want to use/drop:")
+            user_input = input("> ")
+            try:
+                user_item = self.get_item_by_name(user_input)
+                user_does = input(
+                    "Do you want to 'use' or 'drop' {}? Else 'quit'.".format(user_item.name)
+                )
+                # TODO mabye change to dictionary
+                if user_does == "use":
+                    self.use(user_item)
+                    print("You used {}".format(user_input))
+                elif user_does == "drop":
+                    self.drop(user_item)
+                    print("You dropped {}".format(user_input))
+                elif user_does == "quit":
+                    print("Nothing done.")
+                else:
+                    print("Nothing done.")
+                    return
             else:
-                print("Nothing done.")
-                return
-        else:
-            print("Item does not exist")
-            self.list_inventory()
+            except ValueError:
+                print("Item does not exist")
+
 
     @property
-    def _item_names(self):
+    def item_names(self):
         return [item.name for item in self.inventory]
+
+    @property
+    def attributes(self):
+        return
+    {
+        "health"  : self.health,
+        "attack"  : self.attack,
+        "defense" : self.defense,
+        "speed"   : self.speed
+    }
+
+    def use(self, item):
+        if item.passive_effect == False:
+            print("You cannot use this item.")
+        else:
+            self.attributes[item.influenced_attribute] += item.amount
+            self.remove(item)
+            print("You used {}".format(item.name))
+            print("It increased your {} by {}".format(item.influenced_attribute, item.amount))
+            print("You now have {} {}".format(self.attributes[item.influenced_attribute], item.influenced_attribute))
+
+    def drop(self, item):
+        print("You dropped {}.".format(item.name))
+        self.remove(item)
+
+    def remove(self, item):
+        self.inventory.remove(item)
+
+    def get_item_by_name(self, name):
+        for item in self.inventory:
+            if item.name == name:
+                return item
+        raise ValueError("Invalid Item!")
+
+    def addItem(self, item):
+        self.inventory.append(item)
