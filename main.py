@@ -6,6 +6,7 @@ import sys
 from gamedata import GameData
 from json_serialization import load_gamedata, save_gamedata
 from player import Player
+from village import Village
 
 
 def print_bonus_tasks():
@@ -52,32 +53,9 @@ def main():
         player = Player()
         player.create_new_character()
 
-    while True:
-        village()
+    Village(player, "", False).village()
 
     sys.exit(0)
-
-
-def village():
-    while True:
-        print("Welcome to Prog0 Village!")
-        print("What do you want to do?")
-        print()
-        print("  1) Inventory")
-        print("  2) Merchant")
-        print("  3) Blacksmith")
-        print("  4) Druid")
-        print("  5) Dungeon")
-        print("  6) Save Game")
-        print("  0) Quit Game")
-        print()
-
-        user_input = int(input("> "))
-        if user_input in range(7):
-            break
-        print("Invalid choice. Try again")
-
-        # main_game(user_input)
 
 
 if __name__ == "__main__":

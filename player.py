@@ -65,35 +65,43 @@ class Player:
 
     def list_inventory(self):
         while True:
+            if not self.inventory:
+                print("Your inventory is empty.")
+                return
+
             print("Welcome to your inventory {}".format(self.name))
             print("These are your items:")
             print()
             for item in self.inventory:
-                print("  * {}\t\t{}".format(item.name, item.effect))
+                print("  * {0.name:<20} ({0.effect})".format(item))
             print()
             print("Type 'quit' or the name of the item you want to use/drop:")
             user_input = input("> ")
+            if user_input == "quit":
+                return
             try:
                 user_item = self.get_item_by_name(user_input)
-                user_does = input(
-                    "Do you want to 'use' or 'drop' {}? Else 'quit'.".format(user_item.name)
+                print(
+                    "Do you want to 'use' or 'drop' {}? Else 'quit'.".format(
+                        user_item.name
+                    )
                 )
+                user_input = input("> ")
                 # TODO mabye change to dictionary
-                if user_does == "use":
+                if user_input == "use":
                     self.use(user_item)
-                    print("You used {}".format(user_input))
-                elif user_does == "drop":
+                    print("You used {0.name}".format(user_item))
+                elif user_input == "drop":
                     self.drop(user_item)
-                    print("You dropped {}".format(user_input))
-                elif user_does == "quit":
+                    print("You dropped {0.name}".format(user_item))
+                elif user_input == "quit":
                     print("Nothing done.")
                 else:
                     print("Nothing done.")
                     return
-            else:
+
             except ValueError:
                 print("Item does not exist")
-
 
     @property
     def item_names(self):
@@ -101,23 +109,29 @@ class Player:
 
     @property
     def attributes(self):
-        return
-    {
-        "health"  : self.health,
-        "attack"  : self.attack,
-        "defense" : self.defense,
-        "speed"   : self.speed
-    }
+        return {
+            "health": self.health,
+            "attack": self.attack,
+            "defense": self.defense,
+            "speed": self.speed,
+        }
 
     def use(self, item):
-        if item.passive_effect == False:
+        if item.passive_effect is False:
             print("You cannot use this item.")
         else:
             self.attributes[item.influenced_attribute] += item.amount
             self.remove(item)
-            print("You used {}".format(item.name))
-            print("It increased your {} by {}".format(item.influenced_attribute, item.amount))
-            print("You now have {} {}".format(self.attributes[item.influenced_attribute], item.influenced_attribute))
+            print("You used {0.name}".format(item))
+            print(
+                "It increased your {0.influenced_attribute} by {0.amount}".format(item)
+            )
+            print(
+                "You now have {} {}".format(
+                    self.attributes[item.influenced_attribute],
+                    item.influenced_attribute,
+                )
+            )
 
     def drop(self, item):
         print("You dropped {}.".format(item.name))
