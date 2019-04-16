@@ -53,8 +53,11 @@ def main():
         player = Player()
         player.create_new_character()
 
+<<<<<<< HEAD
 
-    Village(player, "", False).village()
+=======
+    Village(player=player, savefile="", bonus_tasks=False).village()
+>>>>>>> village
 
     sys.exit(0)
 
