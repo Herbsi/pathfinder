@@ -148,3 +148,7 @@ class Player:
 
     def addItem(self, item):
         self.inventory.append(item)
+
+    def die():
+        self.inventory = []
+        self.health = 100

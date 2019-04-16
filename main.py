@@ -53,6 +53,7 @@ def main():
         player = Player()
         player.create_new_character()
 
+
     Village(player, "", False).village()
 
     sys.exit(0)

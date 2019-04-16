@@ -13,7 +13,7 @@ class Village:
 
     def village(self):
         while True:
-            user_input = 0
+            user_input = -1
             while True:
                 print("Welcome to Prog0 Village!")
                 print("What do you want to do?")
