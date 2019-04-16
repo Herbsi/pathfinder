@@ -1,8 +1,36 @@
-import sys
-
 from item import Item
 from json_serialization import json_class
 
+
+def village(vill):
+    while True:
+        user_input = -1
+        while True:
+            print("Welcome to Prog0 Village!")
+            print("What do you want to do?")
+            print()
+            print("  1) Inventory")
+            print("  2) Merchant")
+            print("  3) Blacksmith")
+            print("  4) Druid")
+            print("  5) Dungeon")
+            print("  6) Save Game")
+            print("  0) Quit Game")
+            print()
+
+            try:
+                user_input = int(input("> "))
+                if user_input in range(7):
+                    break
+            except ValueError:
+                pass
+
+            print("Invalid choice. Try again.")
+
+        if user_input in [0,5,6]:
+            return user_input
+
+        vill.village_dict[user_input]()
 
 @json_class
 class Village:
@@ -12,32 +40,6 @@ class Village:
         self.bonus_tasks = False
         self.__dict__.update(village)
 
-    def village(self):
-        while True:
-            user_input = -1
-            while True:
-                print("Welcome to Prog0 Village!")
-                print("What do you want to do?")
-                print()
-                print("  1) Inventory")
-                print("  2) Merchant")
-                print("  3) Blacksmith")
-                print("  4) Druid")
-                print("  5) Dungeon")
-                print("  6) Save Game")
-                print("  0) Quit Game")
-                print()
-
-                try:
-                    user_input = int(input("> "))
-                    if user_input in range(7):
-                        break
-                except ValueError:
-                    pass
-
-                print("Invalid choice. Try again.")
-
-            self.village_dict[user_input]()
 
     @property
     def village_dict(self):
@@ -46,9 +48,9 @@ class Village:
             2: self.merchant,
             3: self.blacksmith,
             4: self.druid,
-            # 5 : pass, # dungeon
-            6: self.save,
-            0: self.quit,
+            # # 5 : pass, # dungeon
+            # 6: self.save,
+            # 0: self.quit,
         }
 
     def merchant(self):
@@ -185,16 +187,16 @@ class Village:
         for item in inventory:
             print("  * {i.name:<20} for {i.price:<4} gold ({i.effect})".format(i=item))
 
-    def save(self):
-        print("Game saved to {}".format(self.savefile))
+    # def save(self):
+    #     print("Game saved to {}".format(self.savefile))
 
-    def quit(self):
-        while True:
-            ui = input("Save before exiting? (Y/N) ")
-            if ui.lower() in ["y", "n"]:
-                break
-            else:
-                print("Error: Invalid input!")
-        if ui.lower() == "y":
-            self.save(self.savefile)
-        sys.exit(0)
+    # def quit(self):
+    #     while True:
+    #         ui = input("Save before exiting? (Y/N) ")
+    #         if ui.lower() in ["y", "n"]:
+    #             break
+    #         else:
+    #             print("Error: Invalid input!")
+    #     if ui.lower() == "y":
+    #         self.save(self.savefile)
+    #     sys.exit(0)

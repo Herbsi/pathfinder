@@ -59,7 +59,7 @@ class Player:
 
         answer = input("Is this correct? (Y/N) ")
         while answer.lower() not in ["y", "n"]:
-            answer = input("Please enter Y/y for yes or N/n for no!")
+            answer = input("Please enter Y/y for yes or N/n for no! ")
         if answer.lower() == "n":
             self.create_new_character()
 
@@ -149,6 +149,16 @@ class Player:
     def addItem(self, item):
         self.inventory.append(item)
 
-    def die():
+    def die(self):
         self.inventory = []
+
+    def revive(self):
         self.health = 100
+
+    @property
+    def isdead(self):
+        return self.health < 1
+
+    @property
+    def isalive(self):
+        return self.health >= 1

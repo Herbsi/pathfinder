@@ -3,10 +3,11 @@
 import argparse
 import sys
 
+from dungeon import Dungeon, dungeon
 from gamedata import GameData
 from json_serialization import load_gamedata, save_gamedata
 from player import Player
-from village import Village
+from village import Village, village
 
 
 def print_bonus_tasks():
@@ -18,8 +19,10 @@ def print_bonus_tasks():
 def main():
     parser = argparse.ArgumentParser(description="P0 Adventure")
     parser.add_argument(
-        "--savefile", default="game.json", help="The save file. default: 'game.json'"
-    )
+        "--savefile",
+        dest="savefile",
+        default="game.json",
+        help="The save file. default: 'game.json'")
     parser.add_argument(
         "--new-game",
         dest="new_game",
@@ -48,18 +51,37 @@ def main():
         return
 
     # your code starts here
-
+    save = args.savefile
     if args.new_game:
-        player = Player()
-        player.create_new_character()
+        user = Player()
+        user.create_new_character()
+        gamedata = GameData(player=user, savefile=save, bonus_tasks=False)
 
-<<<<<<< HEAD
+    else:
+        gamedata = load_gamedata(save)
 
-=======
-    Village(player=player, savefile="", bonus_tasks=False).village()
->>>>>>> village
+    prog0 = Village(player=user, bonus_tasks=False)
+
+    while True:
+        user_choice = village(prog0)
+
+        if user_choice == 5:
+            dungeon(Dungeon(player=user, bonus_tasks=False)),
+        elif user_choice == 6:
+            save_gamedata(gamedata, save),
+        elif user_choice == 0:
+            quit(gamedata, save)
+            break
+        else:
+            raise KeyError("main.py:81 Something went wrong with the user choosing what to do!")
 
     sys.exit(0)
+
+
+def quit(gamedata, savefile):
+    ui = input("Save before exiting? (Y/N) ")
+    if ui.lower() in "y":
+        save_gamedata(gamedata, savefile)
 
 
 if __name__ == "__main__":
