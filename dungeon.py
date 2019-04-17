@@ -94,15 +94,17 @@ class Dungeon:
         print("You see {}".format(description))
 
     def attack(self):
-        if self.monsters:
-            while True:
-                if not self.monsters:
-                    print("All enemies defeated.")
-                    break
-                elif self.player.isalive:
-                    self.battleRound()
+        if not self.monsters:
+            print("You are alone in this room.")
+            return
 
-        print("You are alone in this room.")
+        while True:
+            if self.player.isdead:
+                return
+            elif not self.monsters:
+                print("All enemies defeated")
+                return
+            self.battleRound()
 
     def move(self):
         if not self.monsters:
