@@ -22,7 +22,8 @@ def main():
         "--savefile",
         dest="savefile",
         default="game.json",
-        help="The save file. default: 'game.json'")
+        help="The save file. default: 'game.json'",
+    )
     parser.add_argument(
         "--new-game",
         dest="new_game",
@@ -67,7 +68,7 @@ def main():
         user_choice = village(prog0)
 
         if user_choice == 5:
-            dungeon(Dungeon(player=user, bonus_tasks=False)),
+            dungeon(Dungeon(player=user, bonus_tasks=False))
         elif user_choice == 6:
             save_gamedata(gamedata, save),
             print("Game saved to {}".format(save))
@@ -75,7 +76,9 @@ def main():
             quit(gamedata, save)
             break
         else:
-            raise KeyError("main.py Something went wrong with the user choosing what to do!")
+            raise KeyError(
+                "main.py Something went wrong with the user choosing what to do!"
+            )
 
     sys.exit(0)
 

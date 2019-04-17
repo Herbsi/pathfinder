@@ -41,17 +41,17 @@ class Player:
                 "Attack: ",
                 "Please input a positive integer.",
                 lambda s: s > 0,
-                cast=int)
+                cast=int,
+            )
             self.defense = helpers.validInput(
                 "Defense: ",
                 "Please input a positive integer.",
                 lambda s: s > 0,
-                cast=int)
+                cast=int,
+            )
             self.speed = helpers.validInput(
-                "Speed: ",
-                "Please input a positive integer.",
-                lambda s: s > 0,
-                cast=int)
+                "Speed: ", "Please input a positive integer.", lambda s: s > 0, cast=int
+            )
 
             if self.attack + self.defense + self.speed <= 100:
                 break
@@ -87,8 +87,11 @@ class Player:
                 return
             try:
                 user_item = self.getItemByName(user_input)
-                print("Do you want to 'use' or 'drop' {}? Else 'quit'.".format(
-                    user_item.name))
+                print(
+                    "Do you want to 'use' or 'drop' {}? Else 'quit'.".format(
+                        user_item.name
+                    )
+                )
                 user_input = input("> ")
                 if user_input == "use":
                     self.use(user_item)
@@ -135,12 +138,15 @@ class Player:
             # self.attributes[item.influenced_attribute] += item.amount
             self.remove(item)
             print("You used {0.name}.".format(item))
-            print("It increased your {0.influenced_attribute} by {0.amount}.".
-                  format(item))
-            print("You now have {} {}.".format(
-                self.attributes[item.influenced_attribute],
-                item.influenced_attribute,
-            ))
+            print(
+                "It increased your {0.influenced_attribute} by {0.amount}.".format(item)
+            )
+            print(
+                "You now have {} {}.".format(
+                    self.attributes[item.influenced_attribute],
+                    item.influenced_attribute,
+                )
+            )
 
     def drop(self, item):
         print("You dropped {}.".format(item.name))
@@ -184,7 +190,8 @@ class Player:
         self.inventory.append(item)
 
     def die(self):
-        self.inventory = []
+        while self.inventory:
+            self.remove(self.inventory[0])
 
     def revive(self):
         self.health = 100

@@ -7,6 +7,9 @@ def village(vill):
     while True:
         user_input = -1
 
+        if vill.player.isdead:
+            vill.player.revive()
+
         def pre():
             print("Welcome to Prog0 Village!")
             print("What do you want to do?")
@@ -25,7 +28,8 @@ def village(vill):
             "Invalid choice. Try again.",
             lambda x: x in range(7),
             preamble=pre,
-            cast=int)
+            cast=int,
+        )
 
         if user_input in [0, 5, 6]:
             return user_input
@@ -59,12 +63,13 @@ class Village:
 
             print("Welcome to the merchant!")
             print(
-                "You have {0.gold} gold. This is what I would pay for your items: "
-                .format(self.player))
+                "You have {0.gold} gold. This is what I would pay for your items: ".format(
+                    self.player
+                )
+            )
 
             for item in self.player.inventory:
-                print("  * {:<20} for {:>4} gold".format(
-                    item.name, item.price // 2))
+                print("  * {:<20} for {:>4} gold".format(item.name, item.price // 2))
             print()
             print("Type 'quit' or the name of the item you want to sell.")
             user_input = input("> ")
@@ -75,8 +80,9 @@ class Village:
                 self.player.gold += user_item.price // 2
                 self.player.remove(user_item)
                 print("You have chosen {item.name}.".format(item=user_item))
-                print("You now have {player.gold} gold left.".format(
-                    player=self.player))
+                print(
+                    "You now have {player.gold} gold left.".format(player=self.player)
+                )
                 print("Removed item from inventory.")
             except ValueError:
                 print("You do not possess a {}.".format(user_input))
@@ -151,8 +157,10 @@ class Village:
         while True:
             print("Welcome to the {}".format(shopkeeper))
             print(
-                "You have {player.gold} gold to spend. This is what I'm selling: "
-                .format(player=self.player))
+                "You have {player.gold} gold to spend. This is what I'm selling: ".format(
+                    player=self.player
+                )
+            )
 
             self.pprintInventory(inventory)
             print()
@@ -178,5 +186,4 @@ class Village:
 
     def pprintInventory(self, inventory):
         for item in inventory:
-            print("  * {i.name:<20} for {i.price:<4} gold ({i.effect})".format(
-                i=item))
+            print("  * {i.name:<20} for {i.price:<4} gold ({i.effect})".format(i=item))

@@ -10,6 +10,7 @@ def dungeon(dung):
     while True:
         if dung.player.isdead:
             return
+
         user_input = 0
 
         def pre():
@@ -28,10 +29,11 @@ def dungeon(dung):
             "Invalid choice. Try again.",
             lambda x: x in range(6),
             preamble=pre,
-            cast=int)
+            cast=int,
+        )
 
         if user_input == 0:
-            return user_input
+            return
 
         dung.dungeon_dict[user_input]()
 
@@ -40,9 +42,7 @@ def dungeon(dung):
 class Dungeon:
     def __init__(self, player, bonus_tasks):
         self.player = player
-        self.monsters = [
-            self.possibleMonsters["Rat"], self.possibleMonsters["Gnoll"]
-        ]
+        self.monsters = [self.possibleMonsters["Rat"], self.possibleMonsters["Gnoll"]]
         self.room = 1
         self.bonus_tasks = bonus_tasks
         self.chest = []
@@ -60,33 +60,33 @@ class Dungeon:
     @property
     def possibleMonsters(self):
         return {
-            "Rat":
-            Monster(
+            "Rat": Monster(
                 name="Rat",
                 health=30,
                 attack=10,
                 defense=15,
                 speed=50,
                 reward_min=1,
-                reward_max=5),
-            "Gnoll":
-            Monster(
+                reward_max=5,
+            ),
+            "Gnoll": Monster(
                 name="Gnoll",
                 health=60,
                 attack=30,
                 defense=40,
                 speed=20,
                 reward_min=5,
-                reward_max=10),
-            "Wolf":
-            Monster(
+                reward_max=10,
+            ),
+            "Wolf": Monster(
                 name="Wolf",
                 health=40,
                 attack=25,
                 defense=30,
                 speed=60,
                 reward_min=10,
-                reward_max=15)
+                reward_max=15,
+            ),
         }
 
     def lookAround(self):
@@ -122,8 +122,7 @@ class Dungeon:
             else:
                 for item in self.chest:
                     self.player.addItem(item)
-                    print(
-                        "You collected {0.name} from the chest.".format(item))
+                    print("You collected {0.name} from the chest.".format(item))
         else:
             print("Monsters are blocking your way.")
 
@@ -133,25 +132,22 @@ class Dungeon:
     def newRoom(self):
         if self.room % 2 == 1:
             self.monsters = [
-                self.possibleMonsters["Rat"], self.possibleMonsters["Gnoll"]
+                self.possibleMonsters["Rat"],
+                self.possibleMonsters["Gnoll"],
             ]
             self.chest = []
         else:
             self.monsters = [
-                self.possibleMonsters["Wolf"], self.possibleMonsters["Rat"]
+                self.possibleMonsters["Wolf"],
+                self.possibleMonsters["Rat"],
             ]
             self.chest = [
-                Item(
-                    name="Potion",
-                    price=3,
-                    influenced_attribute="health",
-                    amount=10)
+                Item(name="Potion", price=3, influenced_attribute="health", amount=10)
             ]
 
     def battleRound(self):
         attackers = (self.player, *self.monsters)
-        attackers = sorted(
-            attackers, key=lambda creature: creature.speed, reverse=True)
+        attackers = sorted(attackers, key=lambda creature: creature.speed, reverse=True)
         monster_index = self.playerChooseMonster() - 1
         for attacker in attackers:
             if attacker.isalive:
@@ -159,19 +155,28 @@ class Dungeon:
                     defender = self.monsters[monster_index]
                     dmg = damage(self.player, defender)
                     defender.health -= dmg
-                    print("You attacked {0.name} and dealt {1} damage.".format(
-                        defender, dmg))
+                    print(
+                        "You attacked {0.name} and dealt {1} damage.".format(
+                            defender, dmg
+                        )
+                    )
                     if defender.health < 1:
-                        print("{0.name} died. It dropped {0.reward} gold.".format(
-                            defender))
+                        print(
+                            "{0.name} died. It dropped {0.reward} gold.".format(
+                                defender
+                            )
+                        )
                         self.player.gold += defender.reward
                         self.monsters.remove(defender)
 
                 elif isinstance(attacker, Monster):
                     dmg = damage(attacker, self.player)
                     self.player.health -= dmg
-                    print("{0.name} attacked you and dealt {1} damage.".format(
-                        attacker, dmg))
+                    print(
+                        "{0.name} attacked you and dealt {1} damage.".format(
+                            attacker, dmg
+                        )
+                    )
                     if self.player.isdead:
                         print("You were killed by {0.name}.".format(attacker))
                         self.player.die()
@@ -184,8 +189,11 @@ class Dungeon:
             print("You see the following enemies:")
             print()
             for index, monster in enumerate(self.monsters):
-                print("  {idx}) {mons.name:<15} ({mons.health} HP)".format(
-                    idx=index + 1, mons=monster))
+                print(
+                    "  {idx}) {mons.name:<15} ({mons.health} HP)".format(
+                        idx=index + 1, mons=monster
+                    )
+                )
 
             print()
             print("You have {} health.".format(self.player.health))
@@ -197,8 +205,9 @@ class Dungeon:
             lambda x: x in range(1, monster_count + 1),
             monster_count,
             preamble=pre,
-            cast=int)
+            cast=int,
+        )
 
 
 def damage(attacker, defender):
-    return (attacker.attack**2) // (attacker.attack + defender.defense)
+    return (attacker.attack ** 2) // (attacker.attack + defender.defense)
