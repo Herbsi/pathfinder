@@ -14,6 +14,23 @@ class Player:
         self.inventory = []
         self.__dict__.update(player)
 
+    @property
+    def attributes(self):
+        return {
+            "health": self.health,
+            "attack": self.attack,
+            "defense": self.defense,
+            "speed": self.speed,
+        }
+
+    @property
+    def isdead(self):
+        return self.health < 1
+
+    @property
+    def isalive(self):
+        return not self.isdead
+
     def print_stats(self):
         print("Name: {}".format(self.name))
         print("Attributes:")
@@ -27,16 +44,23 @@ class Player:
         while True:
             print("Welcome to P0 Dungeon Quest character creator!")
             self.name = input("Enter your name: ")
-            if self._assigned_points():
+            if self.__assigned_points():
                 break
 
-    def _assigned_points(self):
+    def __assigned_points(self):
         while True:
             print("You have 100 points to assign to your character.")
             print(
                 "Start now to assign those Points to your characters attack, defense and speed."
             )
 
+            # for stat in ["Attack", "Defense", "Speed"]:
+            #     self.attribut[stat.lower()] = helpers.validInput(
+            #         "{}: ".format(stat),
+            #         "Please input a positive integer.",
+            #         lambda s: s > 0,
+            #         cast=int,
+            #     )
             self.attack = helpers.validInput(
                 "Attack: ",
                 "Please input a positive integer.",
@@ -52,9 +76,9 @@ class Player:
             self.speed = helpers.validInput(
                 "Speed: ", "Please input a positive integer.", lambda s: s > 0, cast=int
             )
-
             if self.attack + self.defense + self.speed <= 100:
                 break
+
             print(
                 "Sorry, it seems like you spent more than 100 ability points on your character... Try that again!"
             )
@@ -106,24 +130,13 @@ class Player:
             except ValueError:
                 print("Item does not exist.")
 
-    @property
-    def item_names(self):
-        return [item.name for item in self.inventory]
-
-    @property
-    def attributes(self):
-        return {
-            "health": self.health,
-            "attack": self.attack,
-            "defense": self.defense,
-            "speed": self.speed,
-        }
-
     def use(self, item):
         if item.passive_effect is True:
             print("You cannot use this item.")
         else:
+            # TODO make prettier
             infl_attr = item.influenced_attribute
+
             if infl_attr == "health":
                 self.health += item.amount
             elif infl_attr == "attack":
@@ -165,14 +178,9 @@ class Player:
                 self.speed -= item.amount
             else:
                 raise KeyError("{0.name} has invalid attribute!".format(item))
+            # self.attribute[item.influenced_attribute] -= item.amount
 
         self.inventory.remove(item)
-
-    def getItemByName(self, name):
-        for item in self.inventory:
-            if item.name == name:
-                return item
-        raise ValueError("Invalid Item!")
 
     def addItem(self, item):
         if item.passive_effect:
@@ -189,17 +197,15 @@ class Player:
                 raise KeyError("{0.name} has invalid attribute!".format(item))
         self.inventory.append(item)
 
+    def getItemByName(self, name):
+        for item in self.inventory:
+            if item.name == name:
+                return item
+        raise ValueError("Invalid Item!")
+
     def die(self):
         while self.inventory:
             self.remove(self.inventory[0])
 
     def revive(self):
         self.health = 100
-
-    @property
-    def isdead(self):
-        return self.health < 1
-
-    @property
-    def isalive(self):
-        return self.health >= 1

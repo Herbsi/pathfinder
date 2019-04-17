@@ -5,8 +5,6 @@ from json_serialization import json_class
 
 def village(vill):
     while True:
-        user_input = -1
-
         if vill.player.isdead:
             vill.player.revive()
 
@@ -111,7 +109,7 @@ class Village:
                 passive_effect=True,
             ),
         ]
-        self.shop("blacksmith", blacksmith_items)
+        self.__shop("blacksmith", blacksmith_items)
 
     def druid(self):
         druid_items = [
@@ -151,9 +149,9 @@ class Village:
                 passive_effect=False,
             ),
         ]
-        self.shop("druid", druid_items)
+        self.__shop("druid", druid_items)
 
-    def shop(self, shopkeeper, inventory):
+    def __shop(self, shopkeeper, inventory):
         while True:
             print("Welcome to the {}".format(shopkeeper))
             print(
@@ -162,7 +160,10 @@ class Village:
                 )
             )
 
-            self.pprintInventory(inventory)
+            for item in inventory:
+                print(
+                    "  * {i.name:<20} for {i.price:<4} gold ({i.effect})".format(i=item)
+                )
             print()
             print("Type 'quit' or the name of the item you want to buy.")
             user_input = input("> ")
@@ -170,12 +171,12 @@ class Village:
                 return
             for item in inventory:
                 if item.name == user_input:
-                    self.purchase(item)
+                    self.__purchase(item)
                     break
             else:
                 print("I do not sell '{}'.".format(user_input))
 
-    def purchase(self, item):
+    def __purchase(self, item):
         if self.player.gold >= item.price:
             self.player.gold -= item.price
             self.player.addItem(item)
@@ -183,7 +184,3 @@ class Village:
             print("You have {} gold left.".format(self.player.gold))
         else:
             print("Not enough gold.")
-
-    def pprintInventory(self, inventory):
-        for item in inventory:
-            print("  * {i.name:<20} for {i.price:<4} gold ({i.effect})".format(i=item))

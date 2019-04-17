@@ -42,7 +42,10 @@ def dungeon(dung):
 class Dungeon:
     def __init__(self, player, bonus_tasks):
         self.player = player
-        self.monsters = [self.possibleMonsters["Rat"], self.possibleMonsters["Gnoll"]]
+        self.monsters = [
+            self.__possibleMonsters["Rat"],
+            self.__possibleMonsters["Gnoll"],
+        ]
         self.room = 1
         self.bonus_tasks = bonus_tasks
         self.chest = []
@@ -58,7 +61,7 @@ class Dungeon:
         }
 
     @property
-    def possibleMonsters(self):
+    def __possibleMonsters(self):
         return {
             "Rat": Monster(
                 name="Rat",
@@ -106,14 +109,7 @@ class Dungeon:
                 print("All enemies defeated.")
                 print("You are alone in this room.")
                 return
-            self.battleRound()
-
-    def move(self):
-        if not self.monsters:
-            self.room += 1
-            self.newRoom()
-        else:
-            print("Monsters are blocking your way.")
+            self.__battleRound()
 
     def openChest(self):
         if not self.monsters:
@@ -126,29 +122,36 @@ class Dungeon:
         else:
             print("Monsters are blocking your way.")
 
-    # def run_away(self):
-    #     return
+    def move(self):
+        if not self.monsters:
+            self.room += 1
+            self.__newRoom()
+        else:
+            print("Monsters are blocking your way.")
 
-    def newRoom(self):
+    def __newRoom(self):
         if self.room % 2 == 1:
             self.monsters = [
-                self.possibleMonsters["Rat"],
-                self.possibleMonsters["Gnoll"],
+                self.__possibleMonsters["Rat"],
+                self.__possibleMonsters["Gnoll"],
             ]
             self.chest = []
         else:
             self.monsters = [
-                self.possibleMonsters["Wolf"],
-                self.possibleMonsters["Rat"],
+                self.__possibleMonsters["Wolf"],
+                self.__possibleMonsters["Rat"],
             ]
             self.chest = [
                 Item(name="Potion", price=3, influenced_attribute="health", amount=10)
             ]
 
-    def battleRound(self):
+    def __battleRound(self):
+        def damage(attacker, defender):
+            return (attacker.attack ** 2) // (attacker.attack + defender.defense)
+
         attackers = (self.player, *self.monsters)
         attackers = sorted(attackers, key=lambda creature: creature.speed, reverse=True)
-        monster_index = self.playerChooseMonster() - 1
+        monster_index = self.__playerChooseMonster() - 1
         for attacker in attackers:
             if attacker.isalive:
                 if isinstance(attacker, Player):
@@ -182,7 +185,7 @@ class Dungeon:
                         self.player.die()
                         return
 
-    def playerChooseMonster(self):
+    def __playerChooseMonster(self):
         monster_count = len(self.monsters)
 
         def pre():
@@ -207,7 +210,3 @@ class Dungeon:
             preamble=pre,
             cast=int,
         )
-
-
-def damage(attacker, defender):
-    return (attacker.attack ** 2) // (attacker.attack + defender.defense)
