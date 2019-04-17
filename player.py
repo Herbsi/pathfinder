@@ -132,7 +132,6 @@ class Player:
             else:
                 raise KeyError("{0.name} has invalid attribute!".format(item))
 
-            # TODO might not be changing the attribute
             # self.attributes[item.influenced_attribute] += item.amount
             self.remove(item)
             print("You used {0.name}.".format(item))
@@ -148,6 +147,19 @@ class Player:
         self.remove(item)
 
     def remove(self, item):
+        if item.passive_effect:
+            infl_attr = item.influenced_attribute
+            if infl_attr == "health":
+                self.health -= item.amount
+            elif infl_attr == "attack":
+                self.attack -= item.amount
+            elif infl_attr == "defense":
+                self.defense -= item.amount
+            elif infl_attr == "speed":
+                self.speed -= item.amount
+            else:
+                raise KeyError("{0.name} has invalid attribute!".format(item))
+
         self.inventory.remove(item)
 
     def getItemByName(self, name):
@@ -157,6 +169,18 @@ class Player:
         raise ValueError("Invalid Item!")
 
     def addItem(self, item):
+        if item.passive_effect:
+            infl_attr = item.influenced_attribute
+            if infl_attr == "health":
+                self.health += item.amount
+            elif infl_attr == "attack":
+                self.attack += item.amount
+            elif infl_attr == "defense":
+                self.defense += item.amount
+            elif infl_attr == "speed":
+                self.speed += item.amount
+            else:
+                raise KeyError("{0.name} has invalid attribute!".format(item))
         self.inventory.append(item)
 
     def die(self):

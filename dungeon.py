@@ -45,6 +45,7 @@ class Dungeon:
         ]
         self.room = 1
         self.bonus_tasks = bonus_tasks
+        self.chest = []
 
     @property
     def dungeon_dict(self):
@@ -102,7 +103,8 @@ class Dungeon:
             if self.player.isdead:
                 return
             elif not self.monsters:
-                print("All enemies defeated")
+                print("All enemies defeated.")
+                print("You are alone in this room.")
                 return
             self.battleRound()
 
@@ -152,27 +154,28 @@ class Dungeon:
             attackers, key=lambda creature: creature.speed, reverse=True)
         monster_index = self.playerChooseMonster() - 1
         for attacker in attackers:
-            if isinstance(attacker, Player):
-                defender = self.monsters[monster_index]
-                dmg = damage(self.player, defender)
-                defender.health -= dmg
-                print("You attacked {0.name} and dealt {1} damage.".format(
-                    defender, dmg))
-                if defender.health < 1:
-                    print("{0.name} died. It dropped {0.reward} gold".format(
-                        defender))
-                    self.player.gold += defender.reward
-                    self.monsters.remove(defender)
+            if attacker.isalive:
+                if isinstance(attacker, Player):
+                    defender = self.monsters[monster_index]
+                    dmg = damage(self.player, defender)
+                    defender.health -= dmg
+                    print("You attacked {0.name} and dealt {1} damage.".format(
+                        defender, dmg))
+                    if defender.health < 1:
+                        print("{0.name} died. It dropped {0.reward} gold.".format(
+                            defender))
+                        self.player.gold += defender.reward
+                        self.monsters.remove(defender)
 
-            elif isinstance(attacker, Monster):
-                dmg = damage(attacker, self.player)
-                self.player.health -= dmg
-                print("{0.name} attacked you and dealt {1} damage.".format(
-                    attacker, dmg))
-                if self.player.isdead:
-                    print("You were killed by {0.name}.".format(attacker))
-                    self.player.die()
-                    return
+                elif isinstance(attacker, Monster):
+                    dmg = damage(attacker, self.player)
+                    self.player.health -= dmg
+                    print("{0.name} attacked you and dealt {1} damage.".format(
+                        attacker, dmg))
+                    if self.player.isdead:
+                        print("You were killed by {0.name}.".format(attacker))
+                        self.player.die()
+                        return
 
     def playerChooseMonster(self):
         monster_count = len(self.monsters)

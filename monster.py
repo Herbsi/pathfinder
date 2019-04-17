@@ -18,3 +18,7 @@ class Monster:
     @property
     def reward(self):
         return randint(self.reward_min, self.reward_max)
+
+    @property
+    def isalive(self):
+        return self.health > 1
