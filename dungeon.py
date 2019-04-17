@@ -49,7 +49,7 @@ class Dungeon:
     @property
     def dungeon_dict(self):
         return {
-            1: self.player.list_inventory,
+            1: self.player.listInventory,
             2: self.lookAround,
             3: self.attack,
             4: self.openChest,

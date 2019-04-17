@@ -41,17 +41,13 @@ class Village:
         self.bonus_tasks = False
         self.__dict__.update(village)
 
-
     @property
     def village_dict(self):
         return {
-            1: self.player.list_inventory,
+            1: self.player.listInventory,
             2: self.merchant,
             3: self.blacksmith,
             4: self.druid,
-            # # 5 : pass, # dungeon
-            # 6: self.save,
-            # 0: self.quit,
         }
 
     def merchant(self):
@@ -63,26 +59,24 @@ class Village:
 
             print("Welcome to the merchant!")
             print(
-                "You have {} gold. This is what I would pay for your items: ".format(
-                    self.player.gold
-                )
-            )
+                "You have {0.gold} gold. This is what I would pay for your items: ".
+                format(self.player))
 
             for item in self.player.inventory:
-                print("  * {:<20} for {:<4} gold".format(item.name, item.price // 2))
+                print("  * {:<20} for {:<4} gold".format(
+                    item.name, item.price // 2))
             print()
             print("Type 'quit' or the name of the item you want to sell.")
             user_input = input("> ")
             if user_input == "quit":
                 return
             try:
-                user_item = self.player.get_item_by_name(user_input)
+                user_item = self.player.getItemByName(user_input)
                 self.player.gold += user_item.price // 2
                 self.player.remove(user_item)
                 print("You have chosen {item.name}.".format(item=user_item))
-                print(
-                    "You now have {player.gold} gold left.".format(player=self.player)
-                )
+                print("You now have {player.gold} gold left.".format(
+                    player=self.player))
                 print("Removed item from inventory.")
             except ValueError:
                 print("You do not possess a {}.".format(user_input))
@@ -157,10 +151,8 @@ class Village:
         while True:
             print("Welcome to the {}".format(shopkeeper))
             print(
-                "You have {player.gold} gold to spend. This is what I'm selling: ".format(
-                    player=self.player
-                )
-            )
+                "You have {player.gold} gold to spend. This is what I'm selling: "
+                .format(player=self.player))
 
             self.pprintInventory(inventory)
             print()
@@ -179,25 +171,12 @@ class Village:
         if self.player.gold >= item.price:
             self.player.gold -= item.price
             self.player.addItem(item)
-            print("You have chosen {}".format(item.name))
-            print("You have {} gold left".format(self.player.gold))
+            print("You have chosen {}.".format(item.name))
+            print("You have {} gold left.".format(self.player.gold))
         else:
-            print("Not enough gold")
+            print("Not enough gold.")
 
     def pprintInventory(self, inventory):
         for item in inventory:
-            print("  * {i.name:<20} for {i.price:<4} gold ({i.effect})".format(i=item))
-
-    # def save(self):
-    #     print("Game saved to {}".format(self.savefile))
-
-    # def quit(self):
-    #     while True:
-    #         ui = input("Save before exiting? (Y/N) ")
-    #         if ui.lower() in ["y", "n"]:
-    #             break
-    #         else:
-    #             print("Error: Invalid input!")
-    #     if ui.lower() == "y":
-    #         self.save(self.savefile)
-    #     sys.exit(0)
+            print("  * {i.name:<20} for {i.price:<4} gold ({i.effect})".format(
+                i=item))

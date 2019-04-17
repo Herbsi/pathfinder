@@ -69,7 +69,7 @@ class Player:
             return False
         return True
 
-    def list_inventory(self):
+    def listInventory(self):
         while True:
             if not self.inventory:
                 print("Your inventory is empty.")
@@ -86,11 +86,10 @@ class Player:
             if user_input == "quit":
                 return
             try:
-                user_item = self.get_item_by_name(user_input)
+                user_item = self.getItemByName(user_input)
                 print("Do you want to 'use' or 'drop' {}? Else 'quit'.".format(
                     user_item.name))
                 user_input = input("> ")
-                # TODO mabye change to dictionary
                 if user_input == "use":
                     self.use(user_item)
                     print("You used {0.name}".format(user_item))
@@ -140,7 +139,7 @@ class Player:
     def remove(self, item):
         self.inventory.remove(item)
 
-    def get_item_by_name(self, name):
+    def getItemByName(self, name):
         for item in self.inventory:
             if item.name == name:
                 return item
