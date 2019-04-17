@@ -1,3 +1,4 @@
+import helpers
 from item import Item
 from json_serialization import json_class
 from monster import Monster
@@ -10,7 +11,8 @@ def dungeon(dung):
         if dung.player.isdead:
             return
         user_input = 0
-        while True:
+
+        def pre():
             print("What do you want to do?")
             print()
             print("  1) Inventory")
@@ -21,14 +23,13 @@ def dungeon(dung):
             print("  6) Run away (leave dungeon)")
             print()
 
-            try:
-                user_input = int(input("> "))
-                if user_input in range(1, 7):
-                    break
-            except ValueError:
-                pass
+        user_input = helpers.validInput(
+            "> ",
+            "Invalid choice. Try again.",
+            lambda x: x in range(1, 7),
+            preamble=pre,
+            cast=int)
 
-            print("Invalid choice. Try again.")
 
         dung.dungeon_dict[user_input]()
         if user_input == 6:
@@ -172,7 +173,9 @@ class Dungeon:
                     return
 
     def playerChooseMonster(self):
-        while True:
+        monster_count = len(self.monsters)
+
+        def pre():
             print("You see the following enemies:")
             print()
             for index, monster in enumerate(self.monsters):
@@ -182,14 +185,14 @@ class Dungeon:
             print()
             print("You have {} health.".format(self.player.health))
             print("Which enemy would you like to attack?")
-            try:
-                user_input = int(input("> "))
-                if user_input in range(1, len(self.monsters) + 1):
-                    return user_input
-            except ValueError:
-                pass
-            print("Please input a positive integer between 1 and {}".format(
-                len(self.monsters)))
+
+        return helpers.validInput(
+            "> ",
+            "Please input a positive integer between 1 and {}",
+            lambda x: x in range(1, monster_count + 1),
+            monster_count,
+            preamble=pre,
+            cast=int)
 
 
 def damage(attacker, defender):

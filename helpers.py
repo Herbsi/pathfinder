@@ -1,7 +1,13 @@
 def nothing():
     pass
 
-def validInput(input_msg, error_msg, valid, preamble=nothing, cast=str, *error_args):
+
+def validInput(input_msg,
+               error_msg,
+               valid,
+               *error_args,
+               preamble=nothing,
+               cast=str):
     while True:
         preamble()
         try:

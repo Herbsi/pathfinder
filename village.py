@@ -1,3 +1,4 @@
+import helpers
 from item import Item
 from json_serialization import json_class
 
@@ -5,7 +6,8 @@ from json_serialization import json_class
 def village(vill):
     while True:
         user_input = -1
-        while True:
+
+        def pre():
             print("Welcome to Prog0 Village!")
             print("What do you want to do?")
             print()
@@ -18,19 +20,18 @@ def village(vill):
             print("  0) Quit Game")
             print()
 
-            try:
-                user_input = int(input("> "))
-                if user_input in range(7):
-                    break
-            except ValueError:
-                pass
+        user_input = helpers.validInput(
+            "> ",
+            "Invalid choice. Try again.",
+            lambda x: x in range(7),
+            preamble=pre,
+            cast=int)
 
-            print("Invalid choice. Try again.")
-
-        if user_input in [0,5,6]:
+        if user_input in [0, 5, 6]:
             return user_input
 
         vill.village_dict[user_input]()
+
 
 @json_class
 class Village:
