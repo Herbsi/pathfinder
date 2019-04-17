@@ -23,7 +23,7 @@ class Player:
         print("  * Speed: {}".format(self.speed))
         print()
 
-    def create_new_character(self):
+    def createNewCharacter(self):
         while True:
             print("Welcome to P0 Dungeon Quest character creator!")
             self.name = input("Enter your name: ")
@@ -32,24 +32,24 @@ class Player:
 
     def _assigned_points(self):
         while True:
-            print("You have 100 points to assign to you character.")
+            print("You have 100 points to assign to your character.")
             print(
                 "Start now to assign those Points to your characters attack, defense and speed."
             )
 
             self.attack = helpers.validInput(
                 "Attack: ",
-                "Please input a positive integer",
+                "Please input a positive integer.",
                 lambda s: s > 0,
                 cast=int)
             self.defense = helpers.validInput(
                 "Defense: ",
-                "Please input a positive integer",
+                "Please input a positive integer.",
                 lambda s: s > 0,
                 cast=int)
             self.speed = helpers.validInput(
                 "Speed: ",
-                "Please input a positive integer",
+                "Please input a positive integer.",
                 lambda s: s > 0,
                 cast=int)
 
@@ -75,7 +75,7 @@ class Player:
                 print("Your inventory is empty.")
                 return
 
-            print("Welcome to your inventory {}".format(self.name))
+            print("Welcome to your inventory {}!".format(self.name))
             print("These are your items:")
             print()
             for item in self.inventory:
@@ -92,18 +92,16 @@ class Player:
                 user_input = input("> ")
                 if user_input == "use":
                     self.use(user_item)
-                    print("You used {0.name}".format(user_item))
+                    return
                 elif user_input == "drop":
                     self.drop(user_item)
-                    print("You dropped {0.name}".format(user_item))
-                elif user_input == "quit":
-                    print("Nothing done.")
+                    return
                 else:
                     print("Nothing done.")
                     return
 
             except ValueError:
-                print("Item does not exist")
+                print("Item does not exist.")
 
     @property
     def item_names(self):
@@ -122,12 +120,25 @@ class Player:
         if item.passive_effect is True:
             print("You cannot use this item.")
         else:
-            self.attributes[item.influenced_attribute] += item.amount
+            infl_attr = item.influenced_attribute
+            if infl_attr == "health":
+                self.health += item.amount
+            elif infl_attr == "attack":
+                self.attack += item.amount
+            elif infl_attr == "defense":
+                self.defense += item.amount
+            elif infl_attr == "speed":
+                self.speed += item.amount
+            else:
+                raise KeyError("{0.name} has invalid attribute!".format(item))
+
+            # TODO might not be changing the attribute
+            # self.attributes[item.influenced_attribute] += item.amount
             self.remove(item)
-            print("You used {0.name}".format(item))
-            print("It increased your {0.influenced_attribute} by {0.amount}".
+            print("You used {0.name}.".format(item))
+            print("It increased your {0.influenced_attribute} by {0.amount}.".
                   format(item))
-            print("You now have {} {}".format(
+            print("You now have {} {}.".format(
                 self.attributes[item.influenced_attribute],
                 item.influenced_attribute,
             ))

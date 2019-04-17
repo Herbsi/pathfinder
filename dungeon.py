@@ -20,20 +20,20 @@ def dungeon(dung):
             print("  3) Attack")
             print("  4) Open chest")
             print("  5) Move")
-            print("  6) Run away (leave dungeon)")
+            print("  0) Run away (leave dungeon)")
             print()
 
         user_input = helpers.validInput(
             "> ",
             "Invalid choice. Try again.",
-            lambda x: x in range(1, 7),
+            lambda x: x in range(6),
             preamble=pre,
             cast=int)
 
+        if user_input == 0:
+            return user_input
 
         dung.dungeon_dict[user_input]()
-        if user_input == 6:
-            return user_input
 
 
 @json_class
@@ -170,7 +170,7 @@ class Dungeon:
                 print("{0.name} attacked you and dealt {1} damage.".format(
                     attacker, dmg))
                 if self.player.isdead:
-                    print("You were killed by {0.name}".format(attacker))
+                    print("You were killed by {0.name}.".format(attacker))
                     self.player.die()
                     return
 
@@ -181,7 +181,7 @@ class Dungeon:
             print("You see the following enemies:")
             print()
             for index, monster in enumerate(self.monsters):
-                print("  {idx}) {mons.name:<20} ({mons.health} HP)".format(
+                print("  {idx}) {mons.name:<15} ({mons.health} HP)".format(
                     idx=index + 1, mons=monster))
 
             print()

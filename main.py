@@ -54,11 +54,12 @@ def main():
     save = args.savefile
     if args.new_game:
         user = Player()
-        user.create_new_character()
+        user.createNewCharacter()
         gamedata = GameData(player=user, savefile=save, bonus_tasks=False)
 
     else:
         gamedata = load_gamedata(save)
+        user = gamedata.player
 
     prog0 = Village(player=user, bonus_tasks=False)
 
@@ -69,11 +70,12 @@ def main():
             dungeon(Dungeon(player=user, bonus_tasks=False)),
         elif user_choice == 6:
             save_gamedata(gamedata, save),
+            print("Game saved to {}".format(save))
         elif user_choice == 0:
             quit(gamedata, save)
             break
         else:
-            raise KeyError("main.py:81 Something went wrong with the user choosing what to do!")
+            raise KeyError("main.py Something went wrong with the user choosing what to do!")
 
     sys.exit(0)
 

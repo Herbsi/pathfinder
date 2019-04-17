@@ -16,8 +16,8 @@ def village(vill):
             print("  3) Blacksmith")
             print("  4) Druid")
             print("  5) Dungeon")
-            print("  6) Save Game")
-            print("  0) Quit Game")
+            print("  6) Save game")
+            print("  0) Quit game")
             print()
 
         user_input = helpers.validInput(
@@ -59,11 +59,11 @@ class Village:
 
             print("Welcome to the merchant!")
             print(
-                "You have {0.gold} gold. This is what I would pay for your items: ".
-                format(self.player))
+                "You have {0.gold} gold. This is what I would pay for your items: "
+                .format(self.player))
 
             for item in self.player.inventory:
-                print("  * {:<20} for {:<4} gold".format(
+                print("  * {:<20} for {:>4} gold".format(
                     item.name, item.price // 2))
             print()
             print("Type 'quit' or the name of the item you want to sell.")
