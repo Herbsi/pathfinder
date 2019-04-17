@@ -1,3 +1,4 @@
+import helpers
 from json_serialization import json_class
 
 
@@ -23,45 +24,51 @@ class Player:
         print()
 
     def create_new_character(self):
-        print("Welcome to P0 Dungeon Quest character creator!")
-        self.name = input("Enter your name: ")
-        self._assign_points()
+        while True:
+            print("Welcome to P0 Dungeon Quest character creator!")
+            self.name = input("Enter your name: ")
+            if self._assigned_points():
+                break
 
-    def _assign_points(self):
-        print("You have 100 points to assign to you character.")
-        print(
-            "Start now to assign those Points to your characters attack, defense and speed."
-        )
-        self.attack = int(input("Attack: "))
-        while self.attack <= 0:
-            print("Please input a positive integer")
-            self.attack = int(input("Attack: "))
+    def _assigned_points(self):
+        while True:
+            print("You have 100 points to assign to you character.")
+            print(
+                "Start now to assign those Points to your characters attack, defense and speed."
+            )
 
-        self.defense = int(input("Defense: "))
-        while self.defense <= 0:
-            print("Please input a positive integer")
-            self.defense = int(input("Defense: "))
+            # TODO deal with non-integer input
+            self.attack = helpers.validInput(
+                "Attack: ",
+                "Please input a positive integer",
+                lambda s: s > 0,
+                cast=int)
+            self.defense = helpers.validInput(
+                "Defense: ",
+                "Please input a positive integer",
+                lambda s: s > 0,
+                cast=int)
+            self.speed = helpers.validInput(
+                "Speed: ",
+                "Please input a positive integer",
+                lambda s: s > 0,
+                cast=int)
 
-        self.speed = int(input("Speed: "))
-        while self.speed <= 0:
-            print("Please input a positive integer")
-            self.speed = int(input("Speed: "))
-
-        if self.attack + self.defense + self.speed > 100:
+            if self.attack + self.defense + self.speed <= 100:
+                break
             print(
                 "Sorry, it seems like you spent more than 100 ability points on your character... Try that again!"
             )
             print()
-            self._assign_points()
 
         print("Before you store your character please confirm your stats!")
         self.print_stats()
-
         answer = input("Is this correct? (Y/N) ")
         while answer.lower() not in ["y", "n"]:
             answer = input("Please enter Y/y for yes or N/n for no! ")
         if answer.lower() == "n":
-            self.create_new_character()
+            return False
+        return True
 
     def list_inventory(self):
         while True:
@@ -81,11 +88,8 @@ class Player:
                 return
             try:
                 user_item = self.get_item_by_name(user_input)
-                print(
-                    "Do you want to 'use' or 'drop' {}? Else 'quit'.".format(
-                        user_item.name
-                    )
-                )
+                print("Do you want to 'use' or 'drop' {}? Else 'quit'.".format(
+                    user_item.name))
                 user_input = input("> ")
                 # TODO mabye change to dictionary
                 if user_input == "use":
@@ -123,15 +127,12 @@ class Player:
             self.attributes[item.influenced_attribute] += item.amount
             self.remove(item)
             print("You used {0.name}".format(item))
-            print(
-                "It increased your {0.influenced_attribute} by {0.amount}".format(item)
-            )
-            print(
-                "You now have {} {}".format(
-                    self.attributes[item.influenced_attribute],
-                    item.influenced_attribute,
-                )
-            )
+            print("It increased your {0.influenced_attribute} by {0.amount}".
+                  format(item))
+            print("You now have {} {}".format(
+                self.attributes[item.influenced_attribute],
+                item.influenced_attribute,
+            ))
 
     def drop(self, item):
         print("You dropped {}.".format(item.name))
