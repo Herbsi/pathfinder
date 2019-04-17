@@ -97,10 +97,10 @@ class Dungeon:
             while True:
                 if not self.monsters:
                     print("All enemies defeated.")
-                if self.player.isalive:
+                    break
+                elif self.player.isalive:
                     self.battleRound()
-                else:
-                    return
+
         print("You are alone in this room.")
 
     def move(self):
@@ -112,7 +112,7 @@ class Dungeon:
 
     def openChest(self):
         if not self.monsters:
-            if not self.chets:
+            if not self.chest:
                 print("The chest is empty.")
             else:
                 for item in self.chest:
