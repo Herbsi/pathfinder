@@ -37,7 +37,6 @@ class Player:
                 "Start now to assign those Points to your characters attack, defense and speed."
             )
 
-            # TODO deal with non-integer input
             self.attack = helpers.validInput(
                 "Attack: ",
                 "Please input a positive integer",
@@ -121,7 +120,7 @@ class Player:
         }
 
     def use(self, item):
-        if item.passive_effect is False:
+        if item.passive_effect is True:
             print("You cannot use this item.")
         else:
             self.attributes[item.influenced_attribute] += item.amount
