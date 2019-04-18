@@ -7,15 +7,17 @@ from player import Player
 
 @json_class
 class Dungeon:
-    def __init__(self, player, bonus_tasks):
-        self.player = player
+    def __init__(self, **dungeon):
+        self.player = None
         self.monsters = [
             self.__possibleMonsters["Rat"],
             self.__possibleMonsters["Gnoll"],
         ]
         self.room = 1
-        self.bonus_tasks = bonus_tasks
+        self.bonus_tasks = False
         self.chest = []
+        self.gravedigger = None
+        self.__dict__.update(dungeon)
 
     @property
     def dungeon_dict(self):
@@ -148,6 +150,8 @@ class Dungeon:
                         )
                     )
                     if self.player.isdead:
+                        if self.gravedigger:
+                            self.gravedigger.inventory = self.player.inventory.copy()
                         print("You were killed by {0.name}.".format(attacker))
                         self.player.die()
                         return

@@ -6,14 +6,16 @@ import sys
 import helpers
 from dungeon import Dungeon
 from gamedata import GameData
+from gravedigger import Gravedigger
 from json_serialization import load_gamedata, save_gamedata
 from player import Player
+from shopkeeper import Shopkeeper, blacksmith_items, druid_items
 from village import Village
 
 
 def print_bonus_tasks():
     # TODO: insert the tasks you implemented
-    bonus_tasks = []
+    bonus_tasks = ["gravedigger"]
     print(",".join(str(x) for x in bonus_tasks))
 
 
@@ -57,19 +59,30 @@ def main():
     if args.new_game:
         user = Player()
         user.createNewCharacter()
-        gamedata = GameData(player=user, savefile=save, bonus_tasks=False)
+        gamedata = GameData(player=user, savefile=save, bonus_tasks=args.bonus_tasks)
 
     else:
         gamedata = load_gamedata(save)
         user = gamedata.player
 
-    prog0 = Village(player=user, bonus_tasks=False)
+    schmied = Shopkeeper(name="blacksmith", inventory=blacksmith_items)
+    druide = Shopkeeper(name="druid", inventory=druid_items)
+    prog0 = Village(
+        player=user, bonus_tasks=args.bonus_tasks, blacksmith=schmied, druid=druide
+    )
+
+    if args.bonus_tasks:
+        totengraeber = Gravedigger()
+        prog0.gravedigger = totengraeber
 
     while True:
         user_choice = village(prog0)
 
         if user_choice == 5:
-            dungeon(Dungeon(player=user, bonus_tasks=False))
+            dung0 = Dungeon(player=user, bonus_tasks=args.bonus_tasks)
+            if args.bonus_tasks:
+                dung0.gravedigger = totengraeber
+            dungeon(dung0)
         elif user_choice == 6:
             save_gamedata(gamedata, save),
             print("Game saved to {}".format(save))
@@ -91,6 +104,8 @@ def quit(gamedata, savefile):
 
 
 def village(vill):
+    option_count = 7 if not vill.bonus_tasks else 9
+
     def pre():
         print("Welcome to Prog0 Village!")
         print("What do you want to do?")
@@ -101,6 +116,9 @@ def village(vill):
         print("  4) Druid")
         print("  5) Dungeon")
         print("  6) Save game")
+        if vill.bonus_tasks:
+            print("  7) Gravedigger")
+            print("  8) Treasure Chest")
         print("  0) Quit game")
         print()
 
@@ -111,7 +129,7 @@ def village(vill):
         user_input = helpers.validInput(
             "> ",
             "Invalid choice. Try again.",
-            lambda x: x in range(7),
+            lambda x: x in range(option_count),
             preamble=pre,
             cast=int,
         )
@@ -123,6 +141,8 @@ def village(vill):
 
 
 def dungeon(dung):
+    option_count = 6 if not dung.bonus_tasks else 6
+
     dung.lookAround()
 
     def pre():
@@ -133,6 +153,8 @@ def dungeon(dung):
         print("  3) Attack")
         print("  4) Open chest")
         print("  5) Move")
+        if dung.bonus_tasks:
+            pass
         print("  0) Run away (leave dungeon)")
         print()
 
