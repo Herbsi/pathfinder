@@ -1,14 +1,18 @@
 import helpers
+from gravedigger import Gravedigger
 from item import Item
 from json_serialization import json_class
+from shopkeeper import Shopkeeper, blacksmith_items, druid_items
 
 
 @json_class
 class Village:
     def __init__(self, **village):
         self.player = None
-        self.savefile = ""
         self.bonus_tasks = False
+        self.blacksmith = None
+        self.druid = None
+        self.gravedigger = None
         self.__dict__.update(village)
 
     @property
@@ -16,8 +20,9 @@ class Village:
         return {
             1: self.player.listInventory,
             2: self.merchant,
-            3: self.blacksmith,
-            4: self.druid,
+            3: self.shopAtBlacksmith,
+            4: self.shopAtDruid,
+            7: self.shopAtGravedigger,
         }
 
     def merchant(self):
@@ -53,102 +58,14 @@ class Village:
             except ValueError:
                 print("You do not possess a {}.".format(user_input))
 
-    def blacksmith(self):
-        blacksmith_items = [
-            Item(
-                name="Helmet",
-                price=3,
-                influenced_attribute="defense",
-                amount=2,
-                passive_effect=True,
-            ),
-            Item(
-                name="Chest plate",
-                price=5,
-                influenced_attribute="defense",
-                amount=4,
-                passive_effect=True,
-            ),
-            Item(
-                name="Sword",
-                price=10,
-                influenced_attribute="attack",
-                amount=5,
-                passive_effect=True,
-            ),
-        ]
-        self.__shop("blacksmith", blacksmith_items)
+    def shopAt(self, shopkeeper):
+        shopkeeper.shop(self.player)
 
-    def druid(self):
-        druid_items = [
-            Item(
-                name="Potion",
-                price=3,
-                influenced_attribute="health",
-                amount=10,
-                passive_effect=False,
-            ),
-            Item(
-                name="Beer",
-                price=2,
-                influenced_attribute="speed",
-                amount=(-2),
-                passive_effect=False,
-            ),
-            Item(
-                name="Coffee",
-                price=5,
-                influenced_attribute="speed",
-                amount=2,
-                passive_effect=False,
-            ),
-            Item(
-                name="Antidote",
-                price=15,
-                influenced_attribute="defense",
-                amount=6,
-                passive_effect=False,
-            ),
-            Item(
-                name="Milk",
-                price=15,
-                influenced_attribute="attack",
-                amount=6,
-                passive_effect=False,
-            ),
-        ]
-        self.__shop("druid", druid_items)
+    def shopAtBlacksmith(self):
+        self.shopAt(self.blacksmith)
 
-    def __shop(self, shopkeeper, inventory):
-        while True:
-            print("Welcome to the {}".format(shopkeeper))
-            print(
-                "You have {player.gold} gold to spend. This is what I'm selling: ".format(
-                    player=self.player
-                )
-            )
+    def shopAtDruid(self):
+        self.shopAt(self.druid)
 
-            for item in inventory:
-                print(
-                    "  * {i.name:<20} for {i.price:<4} gold ({i.effect})".format(i=item)
-                )
-            print()
-            print("Type 'quit' or the name of the item you want to buy.")
-            user_input = input("> ")
-            if user_input == "quit":
-                return
-            for item in inventory:
-                if item.name == user_input:
-                    self.__purchase(item)
-                    break
-            else:
-                print("I do not sell '{}'.".format(user_input))
-
-    def __purchase(self, item):
-        if self.player.gold >= item.price:
-            self.player.gold -= item.price
-            self.player.addItem(item)
-            print("You have chosen {}.".format(item.name))
-            print("You have {} gold left.".format(self.player.gold))
-        else:
-            print("Not enough gold.")
+    def shopAtGravedigger(self):
+        self.gravedigger.shop(self.player)
