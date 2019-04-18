@@ -3,11 +3,12 @@
 import argparse
 import sys
 
-from dungeon import Dungeon, dungeon
+import helpers
+from dungeon import Dungeon
 from gamedata import GameData
 from json_serialization import load_gamedata, save_gamedata
 from player import Player
-from village import Village, village
+from village import Village
 
 
 def print_bonus_tasks():
@@ -84,9 +85,75 @@ def main():
 
 
 def quit(gamedata, savefile):
-    ui = input("Save before exiting? (Y/N) ")
-    if ui.lower() in "y":
+    user_input = input("Save before exiting? (Y/N) ")
+    if user_input.lower() in "y":
         save_gamedata(gamedata, savefile)
+
+
+def village(vill):
+    def pre():
+        print("Welcome to Prog0 Village!")
+        print("What do you want to do?")
+        print()
+        print("  1) Inventory")
+        print("  2) Merchant")
+        print("  3) Blacksmith")
+        print("  4) Druid")
+        print("  5) Dungeon")
+        print("  6) Save game")
+        print("  0) Quit game")
+        print()
+
+    while True:
+        if vill.player.isdead:
+            vill.player.revive()
+
+        user_input = helpers.validInput(
+            "> ",
+            "Invalid choice. Try again.",
+            lambda x: x in range(7),
+            preamble=pre,
+            cast=int,
+        )
+
+        if user_input in [0, 5, 6]:
+            return user_input
+
+        vill.village_dict[user_input]()
+
+
+def dungeon(dung):
+    dung.lookAround()
+
+    def pre():
+        print("What do you want to do?")
+        print()
+        print("  1) Inventory")
+        print("  2) Look Around")
+        print("  3) Attack")
+        print("  4) Open chest")
+        print("  5) Move")
+        print("  0) Run away (leave dungeon)")
+        print()
+
+    while True:
+        if dung.player.isdead:
+            return
+
+        user_input = 0
+
+        user_input = helpers.validInput(
+            "> ",
+            "Invalid choice. Try again.",
+            lambda x: x in range(6),
+            preamble=pre,
+            cast=int,
+        )
+
+        if user_input == 0:
+            return
+
+        dung.dungeon_dict[user_input]()
 
 
 if __name__ == "__main__":

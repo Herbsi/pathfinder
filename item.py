@@ -13,5 +13,8 @@ class Item:
 
     @property
     def effect(self):
+
         used_held = "held" if self.passive_effect else "used"
-        return("{:+d} {ia} when {uh}".format(self.amount, ia=self.influenced_attribute, uh=used_held))
+        return "{:+d} {ia} when {uh}".format(
+            self.amount, ia=self.influenced_attribute, uh=used_held
+        )

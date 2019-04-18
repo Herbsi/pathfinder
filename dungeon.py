@@ -5,39 +5,6 @@ from monster import Monster
 from player import Player
 
 
-def dungeon(dung):
-    dung.lookAround()
-    while True:
-        if dung.player.isdead:
-            return
-
-        user_input = 0
-
-        def pre():
-            print("What do you want to do?")
-            print()
-            print("  1) Inventory")
-            print("  2) Look Around")
-            print("  3) Attack")
-            print("  4) Open chest")
-            print("  5) Move")
-            print("  0) Run away (leave dungeon)")
-            print()
-
-        user_input = helpers.validInput(
-            "> ",
-            "Invalid choice. Try again.",
-            lambda x: x in range(6),
-            preamble=pre,
-            cast=int,
-        )
-
-        if user_input == 0:
-            return
-
-        dung.dungeon_dict[user_input]()
-
-
 @json_class
 class Dungeon:
     def __init__(self, player, bonus_tasks):

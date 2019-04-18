@@ -3,38 +3,6 @@ from item import Item
 from json_serialization import json_class
 
 
-def village(vill):
-    while True:
-        if vill.player.isdead:
-            vill.player.revive()
-
-        def pre():
-            print("Welcome to Prog0 Village!")
-            print("What do you want to do?")
-            print()
-            print("  1) Inventory")
-            print("  2) Merchant")
-            print("  3) Blacksmith")
-            print("  4) Druid")
-            print("  5) Dungeon")
-            print("  6) Save game")
-            print("  0) Quit game")
-            print()
-
-        user_input = helpers.validInput(
-            "> ",
-            "Invalid choice. Try again.",
-            lambda x: x in range(7),
-            preamble=pre,
-            cast=int,
-        )
-
-        if user_input in [0, 5, 6]:
-            return user_input
-
-        vill.village_dict[user_input]()
-
-
 @json_class
 class Village:
     def __init__(self, **village):
