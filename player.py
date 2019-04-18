@@ -15,15 +15,6 @@ class Player:
         self.__dict__.update(player)
 
     @property
-    def attributes(self):
-        return {
-            "health": self.health,
-            "attack": self.attack,
-            "defense": self.defense,
-            "speed": self.speed,
-        }
-
-    @property
     def isdead(self):
         return self.health < 1
 
@@ -54,28 +45,15 @@ class Player:
                 "Start now to assign those Points to your characters attack, defense and speed."
             )
 
-            # for stat in ["Attack", "Defense", "Speed"]:
-            #     self.attribut[stat.lower()] = helpers.validInput(
-            #         "{}: ".format(stat),
-            #         "Please input a positive integer.",
-            #         lambda s: s > 0,
-            #         cast=int,
-            #     )
-            self.attack = helpers.validInput(
-                "Attack: ",
-                "Please input a positive integer.",
-                lambda s: s > 0,
-                cast=int,
-            )
-            self.defense = helpers.validInput(
-                "Defense: ",
-                "Please input a positive integer.",
-                lambda s: s > 0,
-                cast=int,
-            )
-            self.speed = helpers.validInput(
-                "Speed: ", "Please input a positive integer.", lambda s: s > 0, cast=int
-            )
+            for stat in ["Attack", "Defense", "Speed"]:
+                new_value = helpers.validInput(
+                    "{}: ".format(stat),
+                    "Please input a positive integer.",
+                    lambda s: s > 0,
+                    cast=int,
+                )
+                setattr(self, stat.lower(), new_value)
+
             if self.attack + self.defense + self.speed <= 100:
                 break
 
@@ -134,21 +112,9 @@ class Player:
         if item.passive_effect is True:
             print("You cannot use this item.")
         else:
-            # TODO make prettier
-            infl_attr = item.influenced_attribute
+            new_value = getattr(self, item.influenced_attribute) + item.amount
+            setattr(self, item.influenced_attribute, new_value)
 
-            if infl_attr == "health":
-                self.health += item.amount
-            elif infl_attr == "attack":
-                self.attack += item.amount
-            elif infl_attr == "defense":
-                self.defense += item.amount
-            elif infl_attr == "speed":
-                self.speed += item.amount
-            else:
-                raise KeyError("{0.name} has invalid attribute!".format(item))
-
-            # self.attributes[item.influenced_attribute] += item.amount
             self.remove(item)
             print("You used {0.name}.".format(item))
             print(
@@ -156,8 +122,7 @@ class Player:
             )
             print(
                 "You now have {} {}.".format(
-                    self.attributes[item.influenced_attribute],
-                    item.influenced_attribute,
+                    getattr(self, item.influenced_attribute), item.influenced_attribute
                 )
             )
 
@@ -167,34 +132,15 @@ class Player:
 
     def remove(self, item):
         if item.passive_effect:
-            infl_attr = item.influenced_attribute
-            if infl_attr == "health":
-                self.health -= item.amount
-            elif infl_attr == "attack":
-                self.attack -= item.amount
-            elif infl_attr == "defense":
-                self.defense -= item.amount
-            elif infl_attr == "speed":
-                self.speed -= item.amount
-            else:
-                raise KeyError("{0.name} has invalid attribute!".format(item))
-            # self.attribute[item.influenced_attribute] -= item.amount
+            new_value = getattr(self, item.influenced_attribute) - item.amount
+            setattr(self, item.influenced_attribute, new_value)
 
         self.inventory.remove(item)
 
     def addItem(self, item):
         if item.passive_effect:
-            infl_attr = item.influenced_attribute
-            if infl_attr == "health":
-                self.health += item.amount
-            elif infl_attr == "attack":
-                self.attack += item.amount
-            elif infl_attr == "defense":
-                self.defense += item.amount
-            elif infl_attr == "speed":
-                self.speed += item.amount
-            else:
-                raise KeyError("{0.name} has invalid attribute!".format(item))
+            new_value = getattr(self, item.influenced_attribute) + item.amount
+            setattr(self, item.influenced_attribute, new_value)
         self.inventory.append(item)
 
     def getItemByName(self, name):
