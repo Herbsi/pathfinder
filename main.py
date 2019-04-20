@@ -4,6 +4,7 @@ import argparse
 import sys
 
 import helpers
+from chest import Chest
 from dungeon import Dungeon
 from gamedata import GameData
 from gravedigger import Gravedigger
@@ -74,6 +75,9 @@ def main():
     if args.bonus_tasks:
         totengraeber = Gravedigger()
         prog0.gravedigger = totengraeber
+
+        truhe = Chest()
+        prog0.chest = truhe
 
     while True:
         user_choice = village(prog0)
