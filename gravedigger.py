@@ -1,10 +1,13 @@
+from json_serialization import json_class
 from shopkeeper import Shopkeeper
 
 
+@json_class
 class Gravedigger(Shopkeeper):
-    def __init__(self):
+    def __init__(self, **gravedigger):
         self.name = "gravedigger"
         self.inventory = []
+        self.__dict__.update(gravedigger)
 
     @property
     def selling_price(self):

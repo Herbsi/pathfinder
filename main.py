@@ -61,10 +61,18 @@ def main():
         user = Player()
         user.createNewCharacter()
         gamedata = GameData(player=user, savefile=save, bonus_tasks=args.bonus_tasks)
+        if args.bonus_tasks:
+            totengraeber = Gravedigger()
+            gamedata.gravedigger = totengraeber
+            truhe = Chest()
+            gamedata.chest = truhe
 
     else:
         gamedata = load_gamedata(save)
         user = gamedata.player
+        if args.bonus_tasks:
+            totengraeber = gamedata.gravedigger
+            truhe = gamedata.chest
 
     schmied = Shopkeeper(name="blacksmith", inventory=blacksmith_items)
     druide = Shopkeeper(name="druid", inventory=druid_items)
@@ -73,10 +81,7 @@ def main():
     )
 
     if args.bonus_tasks:
-        totengraeber = Gravedigger()
         prog0.gravedigger = totengraeber
-
-        truhe = Chest()
         prog0.chest = truhe
 
     while True:

@@ -8,4 +8,6 @@ class GameData:
         self.dungeon_room = None
         self.savefile = ""
         self.bonus_tasks = False
+        self.chest = None
+        self.gravedigger = None
         self.__dict__.update(gamedata)
