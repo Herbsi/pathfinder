@@ -4,6 +4,7 @@ from json_serialization import json_class
 
 @json_class
 class Player:
+    # TODO make child of Inventory_Holder
     def __init__(self, **player):
         self.name = ""
         self.health = 100
