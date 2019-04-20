@@ -1,6 +1,3 @@
-import helpers
-from gravedigger import Gravedigger
-from item import Item
 from json_serialization import json_class
 from shopkeeper import Shopkeeper, blacksmith_items, druid_items
 
@@ -13,6 +10,7 @@ class Village:
         self.blacksmith = None
         self.druid = None
         self.gravedigger = None
+        self.chest = None
         self.__dict__.update(village)
 
     @property
@@ -23,6 +21,7 @@ class Village:
             3: self.shopAtBlacksmith,
             4: self.shopAtDruid,
             7: self.shopAtGravedigger,
+            8: self.useChest,
         }
 
     def merchant(self):
@@ -69,3 +68,6 @@ class Village:
 
     def shopAtGravedigger(self):
         self.gravedigger.shop(self.player)
+
+    def useChest(self):
+        self.chest.openChest(self.player)

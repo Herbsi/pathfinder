@@ -105,7 +105,7 @@ class Player:
                     print("Nothing done.")
                     return
 
-            except ValueError:
+            except KeyError:
                 print("Item does not exist.")
 
     def use(self, item):
@@ -147,7 +147,7 @@ class Player:
         for item in self.inventory:
             if item.name == name:
                 return item
-        raise ValueError("Invalid Item!")
+        raise KeyError("Invalid Item!")
 
     def die(self):
         while self.inventory:
