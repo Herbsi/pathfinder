@@ -18,3 +18,6 @@ class Item:
         return "{:+d} {ia} when {uh}".format(
             self.amount, ia=self.influenced_attribute, uh=used_held
         )
+
+    def display(self):
+        print("  * {0.name:<20} {0.price:>4} ({0.effect})".format(self))

@@ -167,7 +167,7 @@ def dungeon(dung):
         user_input = helpers.validInput(
             "> ",
             "Invalid choice. Try again.",
-            lambda x: x in range(6),
+            lambda x: x in range(option_count),
             preamble=pre,
             cast=int,
         )
