@@ -16,7 +16,7 @@ from village import Village
 
 def print_bonus_tasks():
     # TODO: insert the tasks you implemented
-    bonus_tasks = ["gravedigger"]
+    bonus_tasks = [6, 7]
     print(",".join(str(x) for x in bonus_tasks))
 
 
