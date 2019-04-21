@@ -27,11 +27,7 @@ class Gravedigger(Shopkeeper):
         )
 
         for item in self.inventory:
-            print(
-                "  * {i.name:<20} for {p:>4} gold ({i.effect})".format(
-                    i=item, p=item.price // 2
-                )
-            )
+            print("  * {i.name:<20} ({i.effect})".format(i=item, p=item.price // 2))
         print("Total: {}".format(self.selling_price))
         print()
         print("Type 'quit' or 'buy' if you want to buy back your inventory.")
@@ -39,14 +35,16 @@ class Gravedigger(Shopkeeper):
         if user_input == "quit":
             return
         elif user_input == "buy":
-            self.purchase(self, player)
+            self.purchase(player)
         else:
             print("I do not sell '{}'.".format(user_input))
 
     def purchase(self, player):
         if player.gold >= self.selling_price:
             player.gold -= self.selling_price
-            for item in self.inventory:
+            while self.inventory:
+                # for loop does not gurantee entire inventory
+                item = self.inventory[0]
                 player.addItem(item)
                 self.inventory.remove(item)
                 print("{} added to your inventory.".format(item.name))
